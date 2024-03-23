@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Page Application</title>
+    <!-- Link to CSS files -->
+    <link rel="stylesheet" href="./public/styles.css">
+</head>
+<body>
+    <div id="content">
+        <!-- Content will be dynamically replaced here based on route -->
+    </div>
+
+    <!-- JavaScript code -->
+    <script>
+
+        function renderHomePage() {
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML = `
+                <h1>Welcome to the Homepage!</h1>
+                <button onclick="navigateToRegisterPage()">Register</button>
+                <button onclick="navigateToLoginPage()">Login</button>`;
+        }
+
+        function navigateToRegisterPage() {
+            window.location.href = '/register'; 
+        }
+
+   
+        function navigateToLoginPage() {
+            window.location.href = '/login';
+        }
+
+        renderHomePage();
+    </script>
+</body>
+</html>
