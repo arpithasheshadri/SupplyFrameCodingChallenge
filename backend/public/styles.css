@@ -1,0 +1,40 @@
+body {
+    padding-top: 50px;
+  }
+  
+  .container {
+    max-width: 400px;
+    margin: 0 auto;
+    animation: slideIn 0.5s ease forwards;
+    opacity: 0;
+    position: relative;
+    top: -50px;
+  }
+  
+  @keyframes slideIn {
+    0% {
+      opacity: 0;
+      top: -50px;
+    }
+    100% {
+      opacity: 1;
+      top: 0;
+    }
+  }
+
+  #error {
+    display: none;
+    animation: slideInError 0.5s ease forwards;
+    opacity: 0;
+  }
+  
+  @keyframes slideInError {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  

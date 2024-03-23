@@ -26,6 +26,8 @@ const getUser = async (request, response) => {
 const createUser = async (request, response) => {
   try {
     const params = { ...request.body };
+    params.previousPasswords = [];
+
     // search if the user already exists
     const existingUser = await userService.searchByEmail(params);
     // if the user exists then throw error
@@ -33,6 +35,7 @@ const createUser = async (request, response) => {
       setErrorResponse('403', "User already exists.", response);
     } else {
       // validate user
+
       const validatedResult = validateUser(params);
       if (validatedResult.length === 0) {
         const newUser = await userService.create(params);
