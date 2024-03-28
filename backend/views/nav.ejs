@@ -1,0 +1,22 @@
+<nav id="nav" class="navbar navbar-light bg-light">
+    <div>
+        <a class="navbar-brand" href="/">
+            <img src="../assests/icons/cloudy.png" width="30" height="30" alt="">
+        </a>
+    </div>
+    <div>
+        <button onclick="navigateToRegisterPage()" class="btn btn-sm btn-outline-secondary">Register</button>
+        <button onclick="navigateToLoginPage()" class="btn btn-sm btn-outline-secondary">Login</button>
+    </div>
+</nav>
+
+<script>
+    function navigateToRegisterPage() {
+        window.location.href = '/register';
+    }
+
+
+    function navigateToLoginPage() {
+        window.location.href = '/login';
+    }
+</script>
