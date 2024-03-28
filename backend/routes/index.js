@@ -8,7 +8,7 @@ const currentWeatherRoute =  require("./current-weather-route.js");
 module.exports = (app) => {
     app.use("/register", registerRoute);
     app.use("/login", loginRouter);
-    app.use("/getLocation",verifyToken,coordinateRoute);
-    app.use("/currentWeather",verifyToken,currentWeatherRoute);
+    app.use("/getLocation",coordinateRoute);
+    app.use("/currentWeather",currentWeatherRoute);
     app.use("/",sendInitialPage);
 };
