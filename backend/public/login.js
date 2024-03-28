@@ -13,8 +13,10 @@ document.getElementById('loginForm').addEventListener('submit', function (e) {
     })
         .then(response => {
             if (response.ok) {
-                alert('Login successful!');
-                // Redirect or do something else upon successful login
+                // alert('Login successful!');
+                console.log(response);
+                localStorage.setItem("token",response.data);
+                window.location.href = '/dashboard';
             } else {
                 // Handle errors
                 return response.json().then(data => {

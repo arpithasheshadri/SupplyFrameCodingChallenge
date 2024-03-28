@@ -17,13 +17,24 @@ const initialize = (app) => {
   app.set('view engine', 'ejs');
 
   app.get('/register', (req, res) => {
-    res.render('register'); // Render register.ejs
+    res.render('register'); 
 });
 
 app.get('/login', (req, res) => {
-    res.render('login'); // Render login.ejs
+    res.render('login');
 });
 
+app.get('/dashboard', (req, res) => {
+  res.render('dashboard'); 
+});
+
+app.get('/displayWeather', (req, res) => {
+  res.render('displayWeather'); 
+});
+
+app.get('/map', (req, res) => {
+  res.render('map'); 
+});
   mongoose.connect("mongodb+srv://sheshadribhata:supplyframe@weathercluster.3vxzewv.mongodb.net/?retryWrites=true&w=majority&appName=weatherCluster"); //MongoDB connection
 
   registerRoute(app); //Initialize routes
