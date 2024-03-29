@@ -24,6 +24,9 @@
             <button id="searchBtn" class="btn btn-primary">Search</button>
         </div>
 
+        <div>
+            <canvas id="search-chart"></canvas>
+        </div>
         <!-- Content section for weather information -->
         <div id="weatherContent">
             <!-- Weather information will be dynamically updated here -->
@@ -37,13 +40,19 @@
             <div class="card-deck" id="cityCards"></div>
         </div>
 
-        <div id="city-data-container">
-            <div class="charts">
-                <canvas id="weatherChart"></canvas>
+        <div id="city-data-container" class="city-data-container">
+            <div class="upper-info">
+                <div>
+                    <div id="city-left-card"></div>
+                </div>
+                <div class="charts">
+                    <canvas id="weatherChart"></canvas>
+                </div>
             </div>
-            <div class="table-with-data" id="hourly-weather">
 
+            <div class="table-with-data" id="hourly-weather">
             </div>
+            <div id="pagination"></div>
         </div>
 
 
