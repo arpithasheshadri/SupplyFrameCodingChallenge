@@ -9,23 +9,33 @@
     <script src="https://cdn.maptiler.com/maptiler-weather/v1.1.0/maptiler-weather.umd.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <title>Single Page Application</title>
     <link rel="stylesheet" href="./styles.css">
 </head>
 
 <body>
-    
     <%- include('views/nav.ejs') %>
     <div class="dashboard-home">
         <div class="carasouel-custom">
             <%- include('views/carasouel.ejs') %>
         </div>
-        <div>
-            <div id="time-info">
-                <span id="time-text"></span>
-                <button id="play-pause-bt" class="btn btn-primary btn-sm time-button">Play 3600x</button>
-                <input type="range" id="time-slider" min="0" max="11" step="1">
+        <div class="home-card-container">
+            <div class="home-card">
+                <div class="home-card-info">
+                    Get Complete weather Information everyday
+                </div>
             </div>
+            <div class="home-card">
+                <div class="home-card-info">Daily Morning and Evening weather Conditions</div>
+            </div>
+            <div class="home-card">
+                <div class="home-card-info">
+                    Get Information on Air Quality
+                </div>
+            </div>
+        </div>
+        <div>   
             <div id="map">
                 <ul id="buttons">
                     <li id="precipitation" class="btn btn-primary button">Precipitation</li>
@@ -35,6 +45,11 @@
                     <li id="wind" class="btn btn-primary button">Wind</li>
                 </ul>
             </div>
+        </div>
+        <div id="time-info">
+            <span id="time-text"></span>
+            <button id="play-pause-bt" class="btn btn-primary btn-sm time-button">Play 3600x</button>
+            <input type="range" id="time-slider" min="0" max="11" step="1">
         </div>
     </div>
     
