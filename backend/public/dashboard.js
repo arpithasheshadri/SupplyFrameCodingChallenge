@@ -3,8 +3,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('searchInput');
     const searchSuggestions = document.getElementById('searchSuggestions');
     const searchBtn = document.getElementById('searchBtn');
+    const searchWeather = document.getElementById('weatherContent');
     const cityCardsContainer = document.getElementById('cityCards');
     const hourlyWeather = document.getElementById('hourly-weather');
+    const cityLeftCard = document.getElementById('city-left-card');
+    var isSearching = false;
     const cities = [
         {
             name: "Paris, France",
@@ -36,13 +39,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.addEventListener('click', function (event) {
         const cardElement = event.target.closest('.top-five-card');
-        if (cardElement) {
+        if (cardElement && !isSearching) {
             const index = getIndexAmongSiblings(cardElement);
             plotChart(cities[index].latitude, cities[index].longitude);
-            getWeather(cities[index].latitude,cities[index].longitude);
+            getWeather(cities[index].latitude, cities[index].longitude);
         }
     });
-    
+
     function getIndexAmongSiblings(element) {
         let index = 0;
         while ((element = element.previousElementSibling) !== null) {
@@ -53,7 +56,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     function plotChart(lat, long) {
-        console.log(lat, long)
         fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m,relative_humidity_2m,precipitation&timezone=GMT&forecast_days=1`)
             .then(response => {
                 if (!response.ok) {
@@ -62,19 +64,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(response => {
-
                 const hourlyData = response.hourly;
                 const labels = hourlyData.time.map(timestamp => moment(timestamp).format('hh A'));
                 const temperatureData = hourlyData.temperature_2m;
                 const humidityData = hourlyData.relative_humidity_2m;
                 const precipitationData = hourlyData.precipitation;
 
-                let chartStatus = Chart.getChart("weatherChart"); // "weatherChart" is the ID of your canvas element
-                if (chartStatus) {
-                    chartStatus.destroy();
+                var weatherChartCanvas = isSearching ? document.getElementById('search-chart').getContext('2d') : document.getElementById('weatherChart').getContext('2d');
+                if (isSearching) {
+                    let chartStatus = Chart.getChart("search-chart");
+                    if (chartStatus) {
+                        chartStatus.destroy();
+                    }
                 }
-
-                var weatherChartCanvas = document.getElementById('weatherChart').getContext('2d');
+                else {
+                    let chartStatus = Chart.getChart("weatherChart");
+                    if (chartStatus) {
+                        chartStatus.destroy();
+                    }
+                }
                 var weatherChart = new Chart(weatherChartCanvas, {
                     type: 'line',
                     data: {
@@ -161,97 +169,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     }
-
-    function getWeather(lat,long){
-        fetch(`/currentWeather?lat=${lat}&lon=${long}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch weather data');
-                    }
-                    return response.json();
-                })
-                .then(weatherData => {
-                    console.log(weatherData);
-                    displayWeather(weatherData);
-
-                })
-                .catch(error => {
-                    console.error('Error fetching weather:', error.message);
-                });
-    }
-
-    function displayCurrentWeather(data) {
-        var i = 0;
-        data.forEach(city => {
-            const cardHTML = `
-              <div class="top-five-card">
-                <img class="card-img-top" src="..." alt="Card image cap">
-                <div class="card-body">
-                  <h5 class="card-title">${cities[i].name}</h5>
-                  <p class="card-text">Temperature: ${city.current.temperature_2m}${city.current_units.temperature_2m} </p>
-                  <p class="card-text">Precipitation: ${city.current.precipitation}${city.current_units.precipitation} </p>
-                  <p class="card-text">Wind Speed: ${city.current.wind_speed_10m}${city.current_units.wind_speed_10m}</p>
-                </div>
-                <div class="card-footer">
-                  <small class="text-muted">Time of the day : ${city.current.is_day == 0 ? "Night Time" : "Day Time"}</small>
-                </div>
-              </div>
-            `;
-            i = i + 1;
-            cityCardsContainer.innerHTML += cardHTML;
-        });
-    }
-    // function displayWeather(data) {
-    //     console.log(data);
-    //         const tableHeader = `
-    //           <table class="table table-bordered">
-    //             <thead>
-    //               <tr>
-    //                 <th scope="col">Time</th>
-    //                 <th scope="col">Temperature (°C)</th>
-    //                 <th scope="col">Relative Humidity (%)</th>
-    //                 <th scope="col">Precipitation (mm)</th>
-    //                 <th scope="col">Rain (mm)</th>
-    //                 <th scope="col">Snowfall (cm)</th>
-    //                 <th scope="col">Wind Speed (km/h)</th>
-    //                 <th scope="col">UV Index</th>
-    //                 <th scope="col">Is Day</th>
-    //               </tr>
-    //             </thead>
-    //             <tbody>
-    //         `;
-
-    //         const tableFooter = `
-    //             </tbody>
-    //           </table>
-    //         `;
-
-    //         let tableBody = '';
-
-    //         for (let i = 0; i < 10; i++) {
-    //           tableBody += `
-    //             <tr>
-    //               <td>${data.hourly.time[i]}</td>
-    //               <td>${data.hourly.temperature_2m[i]}</td>
-    //               <td>${data.hourly.relative_humidity_2m[i]}</td>
-    //               <td>${data.hourly.precipitation[i]}</td>
-    //               <td>${data.hourly.rain[i]}</td>
-    //               <td>${data.hourly.snowfall[i]}</td>
-    //               <td>${data.hourly.wind_speed_10m[i]}</td>
-    //               <td>${data.hourly.uv_index[i]}</td>
-    //               <td>${data.hourly.is_day[i]}</td>
-    //             </tr>
-    //           `;
-    //         }
-
-    //         hourlyWeather.innerHTML = tableHeader + tableBody + tableFooter;
-
-    // }
     function displayWeather(data) {
         const pageSize = 6; // Maximum number of entries per page
         const numPages = Math.ceil(data.hourly.time.length / pageSize); // Calculate total number of pages
         let currentPage = 1; // Current page number
-    
+        const page = document.getElementById('pagination');
         // Function to generate table rows for the current page
         function generateTableRows(page) {
             let tableBody = '';
@@ -260,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             console.log(startIndex)
             console.log(endIndex);
-    
+
             for (let i = startIndex; i < endIndex; i++) {
                 tableBody += `
                     <tr>
@@ -278,14 +200,19 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             return tableBody;
         }
-    
-        // Function to update table content for the specified page
+
         function updateTable(page) {
             const tableBody = generateTableRows(page);
-            hourlyWeather.innerHTML = tableHeader + tableBody + tableFooter;
+            if (isSearching) {
+                searchWeather.innerHTML = tableHeader + tableBody + tableFooter;
+            }
+            else {
+                hourlyWeather.innerHTML = tableHeader + tableBody + tableFooter;
+            }
+            page.innerHTML = paginationHtml;
         }
-    
-        // Generate pagination controls
+
+
         let paginationHtml = `
             <ul class="pagination justify-content-center">
                 <li class="page-item"><a class="page-link" href="#" data-page="prev">&laquo;</a></li>
@@ -294,10 +221,10 @@ document.addEventListener('DOMContentLoaded', function () {
             paginationHtml += `<li class="page-item"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
         }
         paginationHtml += `<li class="page-item"><a class="page-link" href="#" data-page="next">&raquo;</a></li></ul>`;
-    
+
         // Display initial page
         const tableHeader = `
-            <table class="table table-bordered">
+            <table class="table table-hover table-bordered">
                 <thead>
                     <tr>
                         <th scope="col">Time</th>
@@ -314,33 +241,107 @@ document.addEventListener('DOMContentLoaded', function () {
                 <tbody>
         `;
         const tableFooter = `</tbody></table>`;
-        hourlyWeather.innerHTML = tableHeader + tableFooter; // Initial rendering
-        hourlyWeather.insertAdjacentHTML('afterend', paginationHtml); // Insert pagination controls after the table
-    
-        updateTable(currentPage);
-    
-        // Attach event listener for pagination
-    
-        hourlyWeather.nextElementSibling.addEventListener('click', function(event) {
-            event.preventDefault();
-            const page = event.target.getAttribute('data-page');
-            if (page === 'prev') {
-                if (currentPage > 1) {
-                    currentPage--;
+
+        if (isSearching) {
+            searchWeather.innerHTML = tableHeader + tableFooter; // Initial rendering
+
+            updateTable(currentPage);
+            searchWeather.nextElementSibling.addEventListener('click', function (event) {
+                event.preventDefault();
+                const page = event.target.getAttribute('data-page');
+                if (page === 'prev') {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        updateTable(currentPage);
+                    }
+                } else if (page === 'next') {
+                    if (currentPage < numPages) {
+                        currentPage++;
+                        updateTable(currentPage);
+                    }
+                } else {
+                    currentPage = parseInt(page);
                     updateTable(currentPage);
                 }
-            } else if (page === 'next') {
-                if (currentPage < numPages) {
-                    currentPage++;
+            });
+        }
+        else {
+            hourlyWeather.innerHTML = tableHeader + tableFooter;
+            page.innerHTML = paginationHtml;
+            updateTable(currentPage);
+            hourlyWeather.nextElementSibling.addEventListener('click', function (event) {
+                event.preventDefault();
+                const page = event.target.getAttribute('data-page');
+                if (page === 'prev') {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        updateTable(currentPage);
+                    }
+                } else if (page === 'next') {
+                    if (currentPage < numPages) {
+                        currentPage++;
+                        updateTable(currentPage);
+                    }
+                } else {
+                    currentPage = parseInt(page);
                     updateTable(currentPage);
                 }
-            } else {
-                currentPage = parseInt(page);
-                updateTable(currentPage);
-            }
+            });
+        }
+
+    }
+
+    function getWeather(lat, long) {
+        fetch(`/currentWeather?lat=${lat}&lon=${long}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch weather data');
+                }
+                return response.json();
+            })
+            .then(weatherData => {
+                console.log(weatherData);
+                displayWeather(weatherData)
+            })
+            .catch(error => {
+                console.error('Error fetching weather:', error.message);
+            });
+    }
+
+    function displayCurrentWeather(data) {
+        var i = 0;
+        const cardsContainer = document.createElement('div');
+        cardsContainer.classList.add('cards-container');
+        data.forEach(city => {
+            var isNight = city.current.is_day == 0 ? true : false;
+            var precip = city.current.precipitation
+            const cardHTML = `
+            <div class="${isNight ? 'top-five-card night' : 'top-five-card morning'}">
+            <img class="card-img-top" src=${isNight ? precip > 0 ? "./assests/icons/night-raining.png" : "./assests/icons/night.png"
+                    : precip > 0 ? "./assests/icons/day-raining.png" : "./assests/icons/day.png"} alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">${cities[i].name}</h5>
+                  <p class="card-text">Temperature: ${city.current.temperature_2m}${city.current_units.temperature_2m} </p>
+                  <div class="card-footer-ele">
+                  <div class="card-footer-container">
+                  <div class="card-title-value">${city.current.precipitation}${city.current_units.precipitation}</div>
+                  <div class="card-text-title">Precipitation</div>
+                  </div>
+                  <div class="card-footer-container">
+                  <div class="card-title-value">${city.current.wind_speed_10m}${city.current_units.wind_speed_10m}</div>
+                  <div class="card-text-title">Wind Speed</div>
+                  </div>
+                  </div>
+                  </div>
+              </div>
+            `;
+            i = i + 1;
+            cityCardsContainer.innerHTML += cardHTML;
         });
     }
-    
+
+
+
 
     let typingTimer;
     const doneTypingInterval = 500;
@@ -383,6 +384,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     searchBtn.addEventListener('click', function () {
         const selectedPlace = searchInput.value.trim();
+        isSearching = true;
+        let topFiveData = document.getElementById("hourly-weather"); // "weatherChart" is the ID of your canvas element
+        if (topFiveData) {
+            topFiveData.innerHTML = "";
+        }
+        let chartStatus = Chart.getChart("weatherChart"); // "weatherChart" is the ID of your canvas element
+        if (chartStatus) {
+            chartStatus.destroy();
+        }
         if (selectedPlace) {
             console.log('Search for weather in:', selectedPlace);
             const [lat, lon] = selectedPlace.split(',').map(parseFloat);
@@ -391,8 +401,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 "lat": lat,
                 "lon": lon
             };
-            console.log("Latitude:", result.lat);
-            console.log("Longitude:", result.lon);
             fetch(`/currentWeather?lat=${result.lat}&lon=${result.lon}`)
                 .then(response => {
                     if (!response.ok) {
@@ -402,12 +410,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
                 .then(weatherData => {
                     console.log('Weather data:', weatherData);
+                    displayWeather(weatherData);
+                    plotChart(lat, lon);
                 })
                 .catch(error => {
                     console.error('Error fetching weather:', error.message);
                 });
         }
     });
+
 
     searchSuggestions.addEventListener('click', function (event) {
         const selectedOption = event.target;
