@@ -8,21 +8,28 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <!-- Link to your CSS file -->
     <link rel="stylesheet" href="../styles.css">
 </head>
 
 <body>
     <%- include('./nav.ejs') %>
         <div class="container">
-            <h1>Weather Dashboard</h1>
-
-            <div class="form-group mt-3">
-                <input type="text" class="form-control" id="searchInput" placeholder="Enter city name">
-                <div id="searchSuggestions" class="list-group" style="display: none;"></div>
+            <div>
+                <h1>
+                    <a href="" class="typewrite" data-period="2000" data-type='[ "Type in the city name", "Get the weather . . ." ]'>
+                      <span class="wrap"></span>
+                    </a>
+                  </h1>
+                <div class="form-group mt-3">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Enter city name">
+                    <div id="searchSuggestions" class="list-group" style="display: none;"></div>
+                </div>
+                <button id="searchBtn" class="btn btn-primary">Search</button>
             </div>
-            <button id="searchBtn" class="btn btn-primary">Search</button>
+            
         </div>
+        
+        
 
         <div>
             <canvas id="search-chart"></canvas>
@@ -42,7 +49,7 @@
 
         <div id="city-data-container" class="city-data-container">
             <div class="upper-info">
-                <div>
+                <div class="city-info-card">
                     <div id="city-left-card"></div>
                 </div>
                 <div class="charts">

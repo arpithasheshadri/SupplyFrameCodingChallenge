@@ -2,7 +2,6 @@ document.getElementById('loginForm').addEventListener('submit', function (e) {
     e.preventDefault();
     let email = document.getElementById('email').value;
     let currentPassword = document.getElementById('password').value;
-    console.log("I am hereeeeee");
     // Make a POST request to your backend API
     fetch('/login', {
         method: 'POST',

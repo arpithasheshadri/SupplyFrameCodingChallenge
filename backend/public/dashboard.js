@@ -1,6 +1,7 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('searchInput');
+    var searchedPlace = '';
     const searchSuggestions = document.getElementById('searchSuggestions');
     const searchBtn = document.getElementById('searchBtn');
     const searchWeather = document.getElementById('weatherContent');
@@ -41,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const cardElement = event.target.closest('.top-five-card');
         if (cardElement && !isSearching) {
             const index = getIndexAmongSiblings(cardElement);
-            plotChart(cities[index].latitude, cities[index].longitude);
+            plotChart(cities[index].latitude, cities[index].longitude,cities[index].name);
             getWeather(cities[index].latitude, cities[index].longitude);
         }
     });
@@ -55,8 +56,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    function plotChart(lat, long) {
-        fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m,relative_humidity_2m,precipitation&timezone=GMT&forecast_days=1`)
+    function plotChart(lat, long,city) {
+        fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m,relative_humidity_2m,precipitation&daily=sunrise,sunset&timezone=auto&forecast_days=1`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Failed to fetch weather data');
@@ -79,6 +80,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 else {
                     let chartStatus = Chart.getChart("weatherChart");
+                    console.log(response.daily);
+                    let cityInfo = `
+                        <h2 class="city-name">${city}</h2>
+                        <img class="sunrise-sunset-img" src="./assests/icons/sunrise.png">
+                        <p class="sunrise">Sunrise: ${moment(response.daily.sunrise[0]).format('hh A')}</p>
+                        <img class="sunrise-sunset-img" src="./assests/icons/sunset.png">
+                        <p class="sunset">Sunset: ${moment(response.daily.sunset[0]).format('hh A')}</p>
+                    `;
+                    cityLeftCard.innerHTML = cityInfo;
                     if (chartStatus) {
                         chartStatus.destroy();
                     }
@@ -186,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function () {
             for (let i = startIndex; i < endIndex; i++) {
                 tableBody += `
                     <tr>
-                        <td>${data.hourly.time[i]}</td>
+                        <td>${moment(data.hourly.time[i]).format('hh A')}</td>
                         <td>${data.hourly.temperature_2m[i]}</td>
                         <td>${data.hourly.relative_humidity_2m[i]}</td>
                         <td>${data.hourly.precipitation[i]}</td>
@@ -383,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     searchBtn.addEventListener('click', function () {
-        const selectedPlace = searchInput.value.trim();
+        const selectedPlace = searchedPlace.trim();
         isSearching = true;
         let topFiveData = document.getElementById("hourly-weather"); // "weatherChart" is the ID of your canvas element
         if (topFiveData) {
@@ -411,7 +421,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(weatherData => {
                     console.log('Weather data:', weatherData);
                     displayWeather(weatherData);
-                    plotChart(lat, lon);
+                    plotChart(lat, lon,selectedPlace);
                 })
                 .catch(error => {
                     console.error('Error fetching weather:', error.message);
@@ -422,9 +432,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     searchSuggestions.addEventListener('click', function (event) {
         const selectedOption = event.target;
+        console.log(selectedOption.innerHTML);
         const selectedPlace = JSON.parse(selectedOption.value);
         console.log(selectedPlace);
-        searchInput.value = `${selectedPlace.lat},${selectedPlace.lon}`;
+        searchedPlace = `${selectedPlace.lat},${selectedPlace.lon}`;
+        searchInput.value = selectedOption.innerHTML;
         searchSuggestions.style.display = 'none';
     });
 
@@ -443,3 +455,60 @@ document.addEventListener('DOMContentLoaded', function () {
 
     getWeatherForTopCities();
 });
+
+var TxtType = function(el, toRotate, period) {
+    this.toRotate = toRotate;
+    this.el = el;
+    this.loopNum = 0;
+    this.period = parseInt(period, 10) || 2000;
+    this.txt = '';
+    this.tick();
+    this.isDeleting = false;
+};
+
+TxtType.prototype.tick = function() {
+    var i = this.loopNum % this.toRotate.length;
+    var fullTxt = this.toRotate[i];
+
+    if (this.isDeleting) {
+    this.txt = fullTxt.substring(0, this.txt.length - 1);
+    } else {
+    this.txt = fullTxt.substring(0, this.txt.length + 1);
+    }
+
+    this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
+
+    var that = this;
+    var delta = 200 - Math.random() * 100;
+
+    if (this.isDeleting) { delta /= 2; }
+
+    if (!this.isDeleting && this.txt === fullTxt) {
+    delta = this.period;
+    this.isDeleting = true;
+    } else if (this.isDeleting && this.txt === '') {
+    this.isDeleting = false;
+    this.loopNum++;
+    delta = 500;
+    }
+
+    setTimeout(function() {
+    that.tick();
+    }, delta);
+};
+
+window.onload = function() {
+    var elements = document.getElementsByClassName('typewrite');
+    for (var i=0; i<elements.length; i++) {
+        var toRotate = elements[i].getAttribute('data-type');
+        var period = elements[i].getAttribute('data-period');
+        if (toRotate) {
+          new TxtType(elements[i], JSON.parse(toRotate), period);
+        }
+    }
+    // INJECT CSS
+    var css = document.createElement("style");
+    css.type = "text/css";
+    css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #fff}";
+    document.body.appendChild(css);
+};

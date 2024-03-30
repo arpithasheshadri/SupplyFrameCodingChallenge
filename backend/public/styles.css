@@ -22,20 +22,28 @@ body {
 }
 .carousel-caption {
   position: absolute;
-  right: 15%;
-  bottom: 50%;
-  left: 15%;
+  right: none;
+  bottom: 40%;
+  left: none;
   z-index: 10;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  color: black;
+  padding-top: 2rem;
+  padding-bottom: none;
   text-align: center;
 }
+.carousel-caption h1{
+  font-size: 4.5rem;
+}
+
 .carasouel-custom .container{
   max-width: none;
 }
 
 .carousel-item img{
+  height: 550px !important;
+  object-fit: cover;
+  border-radius: 2rem;
+}
+.carousel-item video{
   height: 550px !important;
   object-fit: cover;
   border-radius: 2rem;
@@ -58,7 +66,7 @@ body {
 }
 
 .home-card:nth-child(1){
-  background-image: url("./assests/images/rain-2.jpg");
+  background-image: url("./assests/images/back1.jpeg");
   background-size: cover;
   background-repeat: no-repeat;
   margin-left: 0;
@@ -101,6 +109,7 @@ display: flex;
   width: calc(100% - 4rem);
   margin: 2rem;
   border-radius: 2rem;
+  margin-bottom: 2rem;
 }
 
 #pointer-data {
@@ -128,7 +137,10 @@ display: flex;
 
 #time-info {
   width: 60vw;
+  position: relative;
   bottom: 0;
+  top: 360px;
+  margin-top: 500px;
   z-index: 1;
   margin: 10px;
   text-shadow: 0px 0px 5px black;
@@ -186,8 +198,73 @@ display: flex;
   animation: slideIn 0.5s ease forwards;
   opacity: 0;
   position: relative;
-  top: -50px;
+  /* top: -50px; */
 }
+
+.caraosel-link{
+  color: white;
+  text-decoration: underline;
+  font-weight: bold;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.caraosel-link img{
+  width: 15px;
+  height: 15px;
+  margin-top: 10px;
+  font-weight: bold;
+}
+.caraosel-link:hover{
+  cursor: pointer;
+}
+
+
+.login-container{
+  top: 40;
+  width: 100%;
+  height: 50vw;
+}
+
+.login-form {
+  padding: 20px;
+  height: 25vw;
+  width: 30vw;
+  margin-left: 25%;
+  margin-top: 10%;
+  background-color: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.registration-form {
+  padding: 20px;
+  height: 40vw;
+  width: 30vw;
+  margin-left: 35%;
+  margin-top: 3%;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.gif-overlay {
+  position: absolute;
+  top: 50%;
+  left: 63%;
+  transform: translate(-50%, -50%);
+  z-index: -100;
+}
+
+.gif-overlay video{
+  object-fit: cover;
+  width: 350px !important;
+}
+
+
+
+
 
 .top-weather-container {
   max-width: 90%;
@@ -214,6 +291,21 @@ thead {
   grid-template-columns: 1fr 1fr;
   height: 100%;
   margin: 10px 20px;
+}
+.city-info-card {
+  margin-left: 40px;
+}
+#city-left-card{
+  padding-left: 30px;
+  padding-right: 30px;
+  text-align: center;
+  width: 50%;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;  
+}
+
+.sunrise-sunset-img {
+  width: 50px;
+  height: 50px;
 }
 
 .cards-container {
