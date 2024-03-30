@@ -1,6 +1,7 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="../carousel.js"></script>
 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
       <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -9,13 +10,13 @@
     </ol>
     <div class="carousel-inner">
       <div class="carousel-item active">
-        <img class="d-block w-100" src="../assests/images/air-pollution-1.jpg" alt="First slide">
+        <video class="d-block w-100" src="../assests/images/video-1.mp4" alt="First slide" autoplay muted loop>
       </div>
       <div class="carousel-item">
-        <img class="d-block w-100" src="../assests/images/weather-2.jpg" alt="Second slide">
+        <video class="d-block w-100" src="../assests/images/video-3.mp4" alt="Second slide" autoplay muted loop>
       </div>
       <div class="carousel-item">
-        <img class="d-block w-100" src="../assests/images/weather-1.jpg" alt="Third slide">
+        <video class="d-block w-100" src="../assests/images/video-2.mp4" alt="Third slide" autoplay muted loop>
       </div>
     </div>
     <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -31,6 +32,10 @@
             <div class="row justify-content-center">
                 <div class="col-md-8 text-center">
                     <h1>Get Daily Updates of weather everyday</h1>
+                    <div class="caraosel-link" id="carousel-link">
+                      Check Weather
+                      <img src="../assests/icons/up-right-arrow.png"/>
+                    </div>
                 </div>
             </div>
         </div>
