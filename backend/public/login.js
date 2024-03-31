@@ -1,3 +1,4 @@
+
 document.getElementById('loginForm').addEventListener('submit', function (e) {
     e.preventDefault();
     let email = document.getElementById('email').value;
@@ -12,10 +13,8 @@ document.getElementById('loginForm').addEventListener('submit', function (e) {
     })
         .then(response => {
             if (response.ok) {
-                // alert('Login successful!');
-                console.log(response);
-                localStorage.setItem("token",response.data);
-                window.location.href = '/';
+                // Parse response body as JSON
+                return response.json();
             } else {
                 // Handle errors
                 return response.json().then(data => {
@@ -23,11 +22,17 @@ document.getElementById('loginForm').addEventListener('submit', function (e) {
                 });
             }
         })
+        .then(data => {
+            // Set token in local storage
+            localStorage.setItem("token", data.token);
+            window.location.href = '/';
+        })
         .catch(error => {
             console.log(error);
             showError(error.message);
         });
 });
+
 
 
 

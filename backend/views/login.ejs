@@ -27,6 +27,7 @@
             </div>
             <button type="submit" class="btn btn-primary">Login</button>
           </form>
+          <div>Don't have an account? <button onclick="navToRegister()" class="btn btn-primary">Register</button></div>
           <div id="error" class="alert alert-danger mt-3"></div>
         </div>
       <div class="gif-overlay">
@@ -38,6 +39,11 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="../login.js"></script>
+    <script>
+      function navToRegister() {
+        window.location.href = '/register';
+    }
+    </script>
 </body>
 
 </html>

@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchCityLeftCard = document.getElementById('search-city-left-card');
     const cityDataContainer = document.getElementById('city-data-container');
     const searchCityDataContainer = document.getElementById('search-city-data-container');
+    const closeSearchResultsBtn = document.getElementById('close-button');
     var isSearching = false;
     const cities = [
         {
@@ -42,6 +43,22 @@ document.addEventListener('DOMContentLoaded', function () {
     ];
 
 
+    window.addEventListener('DOMContentLoaded', function() {
+        const currentPath = window.location.pathname;
+        if (currentPath === '/dashboard') {
+            checkTokenAndRedirect();
+        }
+    });
+    
+    function checkTokenAndRedirect() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            // Token is not found, show alert and redirect to home page
+            alert('Please log in to access the dashboard.');
+            window.location.href = '/';
+        }
+    }
+
     document.addEventListener('click', function (event) {
         const cardElement = event.target.closest('.top-five-card');
         if (cardElement && !isSearching) {
@@ -59,6 +76,29 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         return index;
     }
+
+    function closeBtn() {
+        console.log("reached");
+    }
+
+    closeSearchResultsBtn?.addEventListener('click', function(event) {
+        
+        isSearching = false;
+        searchInput.value = '';
+        searchCityDataContainer.style.display = 'none';
+    });
+    
+    function addCloseButton() {
+        const button = document.getElementById("close-button");
+        let btn = `
+        <div id="button-close"><img src="../assests/icons/close.png" width="40" height="40" alt=""></div>
+        `;
+        button.innerHTML = btn;
+    }
+
+   
+
+
 
     function addCard(lat,long,city) {
         fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m,relative_humidity_2m,precipitation&daily=sunrise,sunset&timezone=auto&forecast_days=1`)
@@ -249,6 +289,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 searchPage.innerHTML = paginationHtml;
                 pagePagination.style.display = 'none';
                 topFiveCard.style.display = 'none';
+                searchCityDataContainer.style.display = 'block';
+
             }
             else {
                 pagePagination.style.display = 'block';
@@ -458,7 +500,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.log('Weather data:', weatherData);
                     displayWeather(weatherData);
                     plotChart(lat, lon);
-                    addCard(lat,lon,placeName)
+                    addCard(lat,lon,placeName);
+                    addCloseButton();
                 })
                 .catch(error => {
                     console.error('Error fetching weather:', error.message);
