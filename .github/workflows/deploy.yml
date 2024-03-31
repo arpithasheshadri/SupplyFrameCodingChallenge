@@ -36,9 +36,9 @@ jobs:
         run: |
             aws s3 cp s3://weather-arpitha-bucket/weather-key.pem .
           
-      - name: Cat pem
+      - name: Change permissions
         run: |
-            cat weather-key.pem
+            chmod 600 weather-key.pem
 
 
       - name: Deploy application to EC2
