@@ -39,7 +39,23 @@ jobs:
 
       - name: Deploy application to EC2
         run: |
-          ssh -i "${{ secrets.SSH_PRIVATE_KEY }}" ec2-user@"${{ secrets.INSTANCE_IP }}" "bash -s" < deploy.sh
+          ssh -i "${{ secrets.SSH_PRIVATE_KEY }}" ec2-user@"${{ secrets.INSTANCE_IP }}" << 'EOF'
+  
+          sudo yum install git
+          sudo npm install -g pm2
+          git clone git@github.com:arpithasheshadri/SupplyFrameCodingChallenge.git /tmp/
+
+
+
+          cd /tmp/SupplyFrameCodingChallenge/backend
+          npm install
+
+
+          pm2 stop all
+          pm2 start index.js
+
+          
+          EOF
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           INSTANCE_IP: ${{ secrets.INSTANCE_IP }}
