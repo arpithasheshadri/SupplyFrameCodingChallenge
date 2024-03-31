@@ -16,27 +16,33 @@
         <div class="container">
             <div>
                 <h1>
-                    <a href="" class="typewrite" data-period="2000" data-type='[ "Type in the city name", "Get the weather . . ." ]'>
-                      <span class="wrap"></span>
+                    <a href="" class="typewrite" data-period="2000"
+                        data-type='[ "Type in the city name", "Get the weather . . ." ]'>
+                        <span class="wrap"></span>
                     </a>
-                  </h1>
+                </h1>
                 <div class="form-group mt-3">
                     <input type="text" class="form-control" id="searchInput" placeholder="Enter city name">
                     <div id="searchSuggestions" class="list-group" style="display: none;"></div>
                 </div>
                 <button id="searchBtn" class="btn btn-primary">Search</button>
             </div>
-            
-        </div>
-        
-        
 
-        <div>
-            <canvas id="search-chart"></canvas>
         </div>
-        <!-- Content section for weather information -->
-        <div id="weatherContent">
-            <!-- Weather information will be dynamically updated here -->
+        <div id="search-city-data-container" class="city-data-container">
+            <div class="upper-info">
+                <div class="city-info-card">
+                    <div id="search-city-left-card"></div>
+                </div>
+                <div class="charts">
+                    <canvas id="search-chart"></canvas>
+                </div>
+            </div>
+            <!-- Content section for weather information -->
+            <div class="table-with-data" id="weatherContent">
+                <!-- Weather information will be dynamically updated here -->
+            </div>
+            <div id="search-pagination"></div>
         </div>
 
         <!-- Search box and search button -->

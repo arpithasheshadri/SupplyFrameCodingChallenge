@@ -294,13 +294,18 @@ thead {
 }
 .city-info-card {
   margin-left: 40px;
+  background-image: url("./assests/images/back-1.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 1rem;
 }
-#city-left-card{
+#city-left-card, #search-city-left-card{
   padding-left: 30px;
   padding-right: 30px;
   text-align: center;
-  width: 50%;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;  
+  width: 70%;
+ 
 }
 
 .sunrise-sunset-img {
@@ -357,9 +362,25 @@ thead {
 .card-footer-ele .card-text-title{
   font-size: 10px;
 }
-.city-data-container{
+.city-data-container, .search-city-data-container{
   padding-top: 5%;
 }
+
+.city-sub-div {
+  display: flex;
+  flex-direction: row;
+  margin: 20px;
+  justify-content: space-between;
+}
+
+.city-inner-div {
+  margin: 30px;
+}
+
+.sunset ,.sunrise {
+  margin-top: 15px;
+}
+
 @keyframes slideIn {
   0% {
     opacity: 0;
