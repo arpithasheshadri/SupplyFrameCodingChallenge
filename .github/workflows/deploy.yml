@@ -39,7 +39,7 @@ jobs:
 
       - name: Deploy application to EC2
         run: |
-          ssh -i "${{ secrets.SSH_PRIVATE_KEY }}" ec2-user@"${{ secrets.INSTANCE_IP }}" << 'EOF'
+          yes | ssh -i "${{ secrets.SSH_PRIVATE_KEY }}" ec2-user@"${{ secrets.INSTANCE_IP }}" -yes << 'EOF'
   
           sudo yum install git
           sudo npm install -g pm2
