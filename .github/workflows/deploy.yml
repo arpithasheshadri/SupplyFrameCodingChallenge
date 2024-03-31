@@ -51,13 +51,13 @@ jobs:
           sudo yum install -y nodejs
           sudo npm install -g pm2
           cd /tmp
-          mkdir code
+          mkdir -p code
           cd code
           git clone https://github.com/arpithasheshadri/SupplyFrameCodingChallenge.git .
 
 
 
-          cd SupplyFrameCodingChallenge/backend
+          cd backend
           npm install
 
 
