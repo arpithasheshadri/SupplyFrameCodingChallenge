@@ -5,12 +5,22 @@
         </a>
     </div>
     <div>
+        <button onclick="navigateToDashboard()" class="btn btn-sm btn-outline-secondary">Check Weather</button>
         <button onclick="navigateToRegisterPage()" class="btn btn-sm btn-outline-secondary">Register</button>
         <button onclick="navigateToLoginPage()" class="btn btn-sm btn-outline-secondary">Login</button>
     </div>
 </nav>
 
 <script>
+    function navigateToDashboard() {
+        if(localStorage.getItem('token') != undefined){
+            window.location.href = '/dashboard';
+        } else {
+            alert("Please login to use this feature");
+        }
+        
+    }
+
     function navigateToRegisterPage() {
         window.location.href = '/register';
     }

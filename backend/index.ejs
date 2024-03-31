@@ -57,6 +57,24 @@
    
     <!-- JavaScript code -->
     <script>
+ // Check for token and redirect if accessing dashboard directly
+window.addEventListener('DOMContentLoaded', function() {
+    const currentPath = window.location.pathname;
+    if (currentPath === '/dashboard') {
+        checkTokenAndRedirect();
+    }
+});
+
+function checkTokenAndRedirect() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        // Token is not found, show alert and redirect to home page
+        alert('Please log in to access the dashboard.');
+        window.location.href = '/';
+    }
+}
+
+        localStorage.clear();
         maptilersdk.config.apiKey = 'XwFMLCo3wQXvJmffpIpr';
 
         const weatherLayers = {

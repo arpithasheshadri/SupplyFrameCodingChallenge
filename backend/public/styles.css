@@ -294,7 +294,7 @@ thead {
 }
 .city-info-card {
   margin-left: 40px;
-  background-image: url("./assests/images/back-1.jpg");
+  /* background-image: url("./assests/images/back-1.jpg"); */
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -316,6 +316,15 @@ thead {
 .cards-container {
   display: flex;
   justify-content: space-between;
+}
+
+#button-close {
+  margin-left: 30px;
+
+}
+
+#button-close:hover {
+  cursor: pointer;
 }
 
 .top-five-card {
