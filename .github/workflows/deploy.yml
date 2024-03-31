@@ -1,0 +1,31 @@
+name: Deploy Weather Application
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Node.js and npm
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.x'
+
+      - name: Install application dependencies
+        run: npm install
+
+      - name: Deploy application to EC2
+        run: |
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ec2-user@${{ secrets.INSTANCE_IP }} "bash -s" < deploy.sh
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          INSTANCE_IP: ${{ secrets.INSTANCE_IP }}
+
+      
