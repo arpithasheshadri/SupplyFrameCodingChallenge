@@ -46,12 +46,17 @@ jobs:
           yes | ssh -i "${{ secrets.SSH_PRIVATE_KEY }}" -o "StrictHostKeyChecking=no" ec2-user@"${{ secrets.INSTANCE_IP }}"  << 'EOF'
   
           sudo yum install -y git
+          
+          sudo apt-get install -y nodejs npm
           sudo npm install -g pm2
-          git clone git@github.com:arpithasheshadri/SupplyFrameCodingChallenge.git /tmp/
+          cd /tmp
+          mkdir code
+          cd code
+          git clone git@github.com:arpithasheshadri/SupplyFrameCodingChallenge.git .
 
 
 
-          cd /tmp/SupplyFrameCodingChallenge/backend
+          cd SupplyFrameCodingChallenge/backend
           npm install
 
 
