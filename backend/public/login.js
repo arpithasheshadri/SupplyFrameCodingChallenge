@@ -15,7 +15,7 @@ document.getElementById('loginForm').addEventListener('submit', function (e) {
                 // alert('Login successful!');
                 console.log(response);
                 localStorage.setItem("token",response.data);
-                window.location.href = '/dashboard';
+                window.location.href = '/';
             } else {
                 // Handle errors
                 return response.json().then(data => {

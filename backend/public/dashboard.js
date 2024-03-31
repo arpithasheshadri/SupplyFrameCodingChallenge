@@ -2,12 +2,16 @@
 document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('searchInput');
     var searchedPlace = '';
+    var placeName = '';
     const searchSuggestions = document.getElementById('searchSuggestions');
     const searchBtn = document.getElementById('searchBtn');
     const searchWeather = document.getElementById('weatherContent');
     const cityCardsContainer = document.getElementById('cityCards');
     const hourlyWeather = document.getElementById('hourly-weather');
     const cityLeftCard = document.getElementById('city-left-card');
+    const searchCityLeftCard = document.getElementById('search-city-left-card');
+    const cityDataContainer = document.getElementById('city-data-container');
+    const searchCityDataContainer = document.getElementById('search-city-data-container');
     var isSearching = false;
     const cities = [
         {
@@ -42,8 +46,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const cardElement = event.target.closest('.top-five-card');
         if (cardElement && !isSearching) {
             const index = getIndexAmongSiblings(cardElement);
-            plotChart(cities[index].latitude, cities[index].longitude,cities[index].name);
+            plotChart(cities[index].latitude, cities[index].longitude);
             getWeather(cities[index].latitude, cities[index].longitude);
+            addCard(cities[index].latitude,cities[index].longitude,cities[index].name);
         }
     });
 
@@ -55,8 +60,39 @@ document.addEventListener('DOMContentLoaded', function () {
         return index;
     }
 
+    function addCard(lat,long,city) {
+        fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m,relative_humidity_2m,precipitation&daily=sunrise,sunset&timezone=auto&forecast_days=1`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch weather data');
+            }
+            return response.json();
+        })
+        .then(response => {
+            console.log("hehrerehheheheheeh")
+            console.log(response.daily);
+            let cityInfo = `
+                        <div>
+                        <h2 class="city-name">${city}</h2>
+                        </div>
+                        <div class="city-sub-div">
+                            <div class="city-inner-div">
+                                <img class="sunrise-sunset-img" src="./assests/icons/sunrise.png">
+                                <p class="sunrise">Sunrise: ${moment(response.daily.sunrise[0]).format('hh A')}</p>
+                            </div>
+                            <div class="city-inner-div">
+                                <img class="sunrise-sunset-img" src="./assests/icons/sunset.png">
+                                <p class="sunset">Sunset: ${moment(response.daily.sunset[0]).format('hh A')}</p>
+                            </div>
+                        </div>
+                    `;
+            var element = isSearching ? searchCityLeftCard : cityLeftCard;
+            element.innerHTML = cityInfo;
+        })
+    }
 
-    function plotChart(lat, long,city) {
+
+    function plotChart(lat, long) {
         fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m,relative_humidity_2m,precipitation&daily=sunrise,sunset&timezone=auto&forecast_days=1`)
             .then(response => {
                 if (!response.ok) {
@@ -81,14 +117,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 else {
                     let chartStatus = Chart.getChart("weatherChart");
                     console.log(response.daily);
-                    let cityInfo = `
-                        <h2 class="city-name">${city}</h2>
-                        <img class="sunrise-sunset-img" src="./assests/icons/sunrise.png">
-                        <p class="sunrise">Sunrise: ${moment(response.daily.sunrise[0]).format('hh A')}</p>
-                        <img class="sunrise-sunset-img" src="./assests/icons/sunset.png">
-                        <p class="sunset">Sunset: ${moment(response.daily.sunset[0]).format('hh A')}</p>
-                    `;
-                    cityLeftCard.innerHTML = cityInfo;
                     if (chartStatus) {
                         chartStatus.destroy();
                     }
@@ -183,7 +211,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const pageSize = 6; // Maximum number of entries per page
         const numPages = Math.ceil(data.hourly.time.length / pageSize); // Calculate total number of pages
         let currentPage = 1; // Current page number
-        const page = document.getElementById('pagination');
+        const pagePagination = document.getElementById('pagination');
+        const searchPage = document.getElementById('search-pagination');
+        const topFiveCard = document.getElementById('city-left-card');
+        const searchCard = document.getElementById('search-city-left-card');
         // Function to generate table rows for the current page
         function generateTableRows(page) {
             let tableBody = '';
@@ -215,11 +246,16 @@ document.addEventListener('DOMContentLoaded', function () {
             const tableBody = generateTableRows(page);
             if (isSearching) {
                 searchWeather.innerHTML = tableHeader + tableBody + tableFooter;
+                searchPage.innerHTML = paginationHtml;
+                pagePagination.style.display = 'none';
+                topFiveCard.style.display = 'none';
             }
             else {
+                pagePagination.style.display = 'block';
+                topFiveCard.style.display = 'block';
                 hourlyWeather.innerHTML = tableHeader + tableBody + tableFooter;
+                pagePagination.innerHTML = paginationHtml;
             }
-            page.innerHTML = paginationHtml;
         }
 
 
@@ -254,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (isSearching) {
             searchWeather.innerHTML = tableHeader + tableFooter; // Initial rendering
-
+            searchPage.innerHTML = paginationHtml;
             updateTable(currentPage);
             searchWeather.nextElementSibling.addEventListener('click', function (event) {
                 event.preventDefault();
@@ -277,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         else {
             hourlyWeather.innerHTML = tableHeader + tableFooter;
-            page.innerHTML = paginationHtml;
+            pagePagination.innerHTML = paginationHtml;
             updateTable(currentPage);
             hourlyWeather.nextElementSibling.addEventListener('click', function (event) {
                 event.preventDefault();
@@ -421,7 +457,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(weatherData => {
                     console.log('Weather data:', weatherData);
                     displayWeather(weatherData);
-                    plotChart(lat, lon,selectedPlace);
+                    plotChart(lat, lon);
+                    addCard(lat,lon,placeName)
                 })
                 .catch(error => {
                     console.error('Error fetching weather:', error.message);
@@ -435,6 +472,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log(selectedOption.innerHTML);
         const selectedPlace = JSON.parse(selectedOption.value);
         console.log(selectedPlace);
+        placeName = selectedOption.innerHTML;
         searchedPlace = `${selectedPlace.lat},${selectedPlace.lon}`;
         searchInput.value = selectedOption.innerHTML;
         searchSuggestions.style.display = 'none';
