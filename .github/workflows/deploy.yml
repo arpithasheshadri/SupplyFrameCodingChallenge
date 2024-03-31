@@ -52,7 +52,7 @@ jobs:
           cd /tmp
           mkdir code
           cd code
-          git clone git@github.com:arpithasheshadri/SupplyFrameCodingChallenge.git .
+          git clone https://github.com/arpithasheshadri/SupplyFrameCodingChallenge.git .
 
 
 
