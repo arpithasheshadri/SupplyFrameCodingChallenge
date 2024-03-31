@@ -20,7 +20,7 @@ jobs:
 
       - name: Deploy application to EC2
         run: |
-          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ec2-user@${{ secrets.INSTANCE_IP }} "bash -s" < deploy.sh
+          ssh -i "${{ secrets.SSH_PRIVATE_KEY }}" ec2-user@"${{ secrets.INSTANCE_IP }}" "bash -s" < deploy.sh
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           INSTANCE_IP: ${{ secrets.INSTANCE_IP }}
